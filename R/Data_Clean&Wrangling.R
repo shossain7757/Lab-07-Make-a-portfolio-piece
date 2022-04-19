@@ -6,7 +6,7 @@ data <- read.table(here::here('Data','SEER_breast_cancer.csv'), header = TRUE, s
 
 ## Drop Repetitive Columns 
 
-
+names(data)
 
 ## Rename Some Columns
 
