@@ -4,7 +4,7 @@ data <- read.table(here::here('Data','SEER_breast_cancer.csv'), header = TRUE, s
 
 # Data Cleaning
 
-## Drop Repetitive Columns 
+## Drop Unnecessary Columns 
 
 clean_data <- data |>
   select(-Primary.Site,-Histologic.Type.ICD.O.3,-ICD.O.3.Hist.behav,-ICD.O.3.Hist.behav..malignant,
@@ -29,11 +29,35 @@ clean_data <- clean_data |>
          Cancer_grade_clinical = Grade.Clinical..2018..,
          Cancer_grade_pathological = Grade.Pathological..2018..,
          Histology_Type = Histology.recode...broad.groupings,
-         Reason_for_no_surgery = Reason.no.cancer.directed.surgery) 
+         Reason_for_no_surgery = Reason.no.cancer.directed.surgery,
+         Cause_of_death = SEER.cause.specific.death.classification) 
   
   
 
 
+## Label Missing Values 
 
 
+
+clean_data |>
+  select(everything())|>
+  unlist()|>
+  unique()
+
+clean_data |>
+  mutate(across(where(is.character), ~na_if(., list("Unknown","Blank(s)"))))|>
+  unlist()|>
+  unique()
+
+
+
+## Change Variable Types
+
+clean_data <- clean_data |>
+  mutate_at(vars(-Year.of.diagnosis,-Survival.months),factor)
+
+clean_data <- clean_data |>
+  mutate_at(vars(Survival.months),as.numeric)
+
+  
 
