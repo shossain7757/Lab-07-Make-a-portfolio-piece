@@ -140,7 +140,22 @@ clean_data <- clean_data |>
     .after = Diagnostic.Confirmation
   )
 
+## Cancer Grade
 
+clean_data |>
+  select(Cancer_grade)|>
+  unlist()|>
+  unique()
+
+clean_data <- clean_data |>
+  mutate(
+    Cancer_grade = recode(Cancer_grade, 
+                  "Moderately differentiated; Grade II" = "Grade II",
+                  "Poorly differentiated; Grade III" = "Grade III",
+                  "Well differentiated; Grade I" = "Grade I",
+                  "Undifferentiated; anaplastic; Grade IV" = "Grade IV"),
+    .after = Cell_behavior
+  )
 
 ## Output the cleaned data
 
