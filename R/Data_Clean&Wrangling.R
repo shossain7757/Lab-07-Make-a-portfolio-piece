@@ -142,4 +142,11 @@ clean_data <- clean_data |>
 
 
 
+## Output the cleaned data
+
+
+write_csv(
+  clean_data, 
+  here::here('Data','SEER_breast_cancer_Clean.csv')
+)
 
