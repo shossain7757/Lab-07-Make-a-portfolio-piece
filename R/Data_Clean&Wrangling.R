@@ -47,7 +47,9 @@ clean_data |>
 
 clean_data <- clean_data |>
   replace_with_na_if(.predicate = is.character,
-                     condition = ~.x %in% (c("Unknown","Blank(s)","N/A not seq 0-59"))) 
+                     condition = ~.x %in% (c("Unknown","Blank(s)","N/A not seq 0-59",
+                                             "Unknown; death certificate; or autopsy only (2003+)",
+                                             "Recommended, unknown if performed"))) 
 
 ## Drop missing values
 
@@ -156,6 +158,29 @@ clean_data <- clean_data |>
                   "Undifferentiated; anaplastic; Grade IV" = "Grade IV"),
     .after = Cell_behavior
   )
+
+
+## Reason for no surgery
+
+clean_data |>
+  select(Reason_for_no_surgery)|>
+  unlist()|>
+  unique()
+
+clean_data <- clean_data |>
+  mutate(
+    Surgery = recode(Reason_for_no_surgery, 
+                     "Surgery performed" = "Surgery performed",
+                     .default = "Surgery not performed"),
+    .after = Histology_Type
+  )
+
+
+## Remove Reason for no surgery column
+
+
+clean_data <- clean_data |>
+  select(-Reason_for_no_surgery)
 
 ## Output the cleaned data
 

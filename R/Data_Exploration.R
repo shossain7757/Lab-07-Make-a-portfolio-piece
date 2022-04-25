@@ -89,4 +89,92 @@ ggsave(here::here("Figures", "Survival X Grades.svg"),
 )
 
 
+## Survival Months by Age_group
+
+
+survivalxage <- ggplot(clean_data) +
+  aes(x = Age_group,
+      y = Survival.months,
+      color = Age_group) +
+  geom_boxplot()
+
+
+survivalxage <- survivalxage + guides(x = guide_axis(angle = 45))
+
+survivalxage
+
+
+## Saving the plot
+
+ggsave(here::here("Figures", "Survival X Age.svg"), 
+       survivalxage,
+       height = 6,
+       width = 7
+)
+
+## survival month by primary site
+
+survivalxsite <- ggplot(clean_data) +
+  aes(x = Primary_site,
+      y = Survival.months,
+      color = Primary_site) +
+  geom_boxplot()
+
+
+survivalxsite <- survivalxsite + guides(x = guide_axis(angle = 45))
+
+survivalxsite
+
+
+## Saving the plot
+
+ggsave(here::here("Figures", "Survival X site.svg"), 
+       survivalxsite,
+       height = 6,
+       width = 7
+)
+
+
+## Survival by surgery
+
+survivalxsurgery <- ggplot(clean_data) +
+  aes(x = Reason_for_no_surgery,
+      y = Survival.months,
+      color = Reason_for_no_surgery) +
+  geom_boxplot()
+
+
+survivalxsurgery <- survivalxsurgery + guides(x = guide_axis(angle = 45))
+
+survivalxsurgery
+
+
+## Survival by Laterality
+
+
+survivalxlaterality <- ggplot(clean_data) +
+  aes(x = Laterality,
+      y = Survival.months,
+      color = Laterality) +
+  geom_boxplot()
+
+
+survivalxlaterality <- survivalxlaterality + guides(x = guide_axis(angle = 45))
+
+survivalxlaterality
+
+
+## Survival by Histology type
+
+
+survivalxhistology <- ggplot(clean_data) +
+  aes(x = Histology_Type,
+      y = Survival.months,
+      color = Histology_Type) +
+  geom_boxplot()
+
+
+survivalxhistology <- survivalxhistology + guides(x = guide_axis(angle = 90))
+
+survivalxhistology
 
