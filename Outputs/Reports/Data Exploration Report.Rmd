@@ -1,0 +1,136 @@
+---
+title: "Data Exploration Report"
+author: "Shafayet Shariar Hossain"
+date: "4/30/2022"
+output: html_document
+---
+
+## Load packages and data
+
+```{r setup, message = FALSE, warning=FALSE}
+
+library(tidyverse)
+library(ggplot2)
+library(svglite)
+
+clean_data <- read.table(here::here('Data','SEER_breast_cancer_Clean.csv'), header = TRUE, sep = ',')
+
+## Change Variable Types
+
+clean_data <- clean_data |>
+  mutate_at(vars(-Year.of.diagnosis,-Survival.months),as.factor)
+
+```
+
+## Data Exploration
+
+The SEER breast cancer data involves patient demographic information i.e. age, sex, race and their diagnostic information regarding breast cancer. The age variable in the dataset is grouped data that is why exact age of the patient is unknown. The dataset also includes variables regarding the surgery treatment of the patients and their corresponding survival months. Therefore, exploratory data analysis can reveal questions such as age distributions of breast cancer patients and many more. Below some exploratory analysis have been done to extract some insight from the dataset.
+
+## Age Distribution of Breast Cancer Patients
+
+
+```{r}
+
+age_distribution <- ggplot(clean_data |>
+                          group_by(Age_group)|>
+                          summarise( N = n()))+
+  aes(x=Age_group, y=N) + 
+  geom_bar(stat = "identity") +
+  coord_flip()+
+  labs(title = 'Age distribution of Breast Cancer Patients')
+
+age_distribution
+```
+
+
+The age distribution of the breast cancer patients shows that most of the patients are aged between approximately 50-70 years. The distribution peaks mostly around those groups. However, there are also significant amount of breast cancer patients that are relatively young. The distribution also resembles normal distribution. In the lower age groups, there are very few patients in number. That is why those bars are not visible in the graph. 
+
+## Age group by Race
+
+
+```{r, message=FALSE}
+
+agexrace <- ggplot(clean_data |>
+                            group_by(Age_group,Race)|>
+                            summarise( N = n()))+
+  aes(x=Age_group, y=N, fill = Race) + 
+  geom_bar(stat = "identity") +
+  labs(title = 'Barplot of Age by Race of Breast Cancer Patients')
+
+agexrace <- agexrace + guides(x = guide_axis(angle = 45))
+
+agexrace
+
+
+```
+
+
+From the plot it can be observed that in each of the age groups most of the breast cancer patients are predominantly white and the second most frequent race is black. Therefore, it provides an additional insight that most breast cancer patients are white across all age groups in US.
+
+
+## Survival Months distribution by Race
+
+```{r, message=FALSE}
+survivalxrace <- ggplot(clean_data)+
+  aes(x=Survival.months, y = Race, fill = Race) + 
+  ggridges::geom_density_ridges(size = .2, alpha = .5, scale = 3) +
+  labs(title = 'Survival distribution by Race')
+
+survivalxrace
+```
+
+
+The survival months distribution across different race shows all the race experience similar distribution in terms of their survival months. Therefore, we can gather insight that the survival trajectory of patients haven't been affected by the race they are part of. 
+
+## Survival Months Distribution by Cancer Grade
+
+```{r}
+survivalxgrade <- ggplot(clean_data|>
+                           mutate(Cancer_grade = fct_relevel(Cancer_grade,
+                                                             "Grade I", "Grade II",
+                                                             "Grade III", "Grade IV")))+
+  aes(x=Survival.months, y = Cancer_grade, fill = Cancer_grade) + 
+  ggridges::geom_density_ridges(size = .2, alpha = .5, scale = 3) +
+  labs(title = 'Survival distribution by Cancer_grade')
+
+survivalxgrade
+```
+
+The stage of a cancer describes the size of a tumour and how far it has spread from where it originated. It describes the appearance of the cancerous cells. The staging of cancer is done through cancer grade and the higher the grade the higher the spread of the cancerous cells. The above graph shows the distribution of survival months in different cancer grades. And it can be observed that grade IV has a completely different survival month distribution compared to other cancer grades. Also, grades I II and III have similar distribution. 
+
+## Survival Months by Age Group
+
+```{r}
+survivalxage <- ggplot(clean_data) +
+  aes(x = Age_group,
+      y = Survival.months,
+      color = Age_group) +
+  geom_boxplot()+
+  labs(title = "Boxplot of Survival Months by Age Group")
+
+
+survivalxage <- survivalxage + guides(x = guide_axis(angle = 45))
+
+survivalxage
+```
+
+
+The above graph shows the quantiles of survival months across different age groups. The boxplot shows that the median survival months are almost same across all age groups and provides insight that higher age or lower age doesn't have any impact on survival of the breast cancer patients. 
+
+
+## Survival Months by Primary Site
+
+```{r}
+survivalxsite <- ggplot(clean_data) +
+  aes(x = Primary_site,
+      y = Survival.months,
+      color = Primary_site) +
+  geom_boxplot()+
+  labs(title = "Boxplot of Survival Months by Primary Site")
+
+
+survivalxsite <- survivalxsite + guides(x = guide_axis(angle = 45))
+
+survivalxsite
+```
+

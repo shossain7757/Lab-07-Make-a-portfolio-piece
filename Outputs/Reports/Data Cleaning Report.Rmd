@@ -1,0 +1,226 @@
+---
+title: "Data Cleaning Report"
+author: "Shafayet Shariar Hossain"
+date: "4/30/2022"
+output: html_document
+---
+
+
+
+## Load Packages and Data
+
+```{r setup, message = FALSE}
+
+library(tidyverse)
+library(naniar)
+
+data <- read.table(here::here('Data','SEER_breast_cancer.csv'), header = TRUE, sep = ',')
+
+
+```
+
+
+The Surveillance, Epidemiology, and End Results (SEER) Program provides cancer information on US population. The database involves information on different types of cancer on US demographics. The variables in the dataset mostly provide information on the primary diagnostic history of the patient e.g. primary site, laterality etc and their corresponding information on surgery. The dataset  also includes survival months for each of those patients and whether patient died of the cancer or not. For this report we took a subset of breast cancer patients as breast cancer as a disease case is the highest cause of death behind cardiovascular disease.The rest of the report involves cleaning and preparing the dataset for data exploration.
+
+## Drop Unnecessary Columns
+
+The SEER dataset used in this analysis has 34 variables with 97307 observations. Among the 34 variables most of the variables involve standardized disease coding. Therefore, a big portion of the columns were dropped because in some cases they repeated same information available in other variables or they have standardized codes (e.g. ICD, AJCC) which needs conversion to make those useful. Since, conversion of those variables using ICD codes requires extensive knowledge on treatment we dropped those variables for the sake of this project. After dropping those columns, the SEER breast cancer dataset has 13 variables with 97307 observations.
+
+```{r}
+## Drop Unnecessary Columns 
+
+clean_data <- data |>
+  select(-Primary.Site,-Histologic.Type.ICD.O.3,-ICD.O.3.Hist.behav,
+         -ICD.O.3.Hist.behav..malignant,-ICCC.site.recode.3rd.edition.IARC.2017,
+         -Site.recode.ICD.O.3.WHO.2008..for.SIRs.,-ICCC.site.recode.ICD.O.3.WHO.2008,
+         -ICCC.site.rec.extended.ICD.O.3.WHO.2008,
+         -Schema.ID..2018..,-AJCC.ID..2018..,-EOD.Schema.ID.Recode..2010..,
+         -Site.recode...rare.tumors,-AYA.site.recode.WHO.2008,
+         -RX.Summ..Surg.Prim.Site..1998..,-RX.Summ..Surg.Oth.Reg.Dis..2003..,
+         -AYA.site.recode.2020.Revision,
+         -ICCC.site.recode.extended.3rd.edition.IARC.2017,
+         -SEER.other.cause.of.death.classification,-COD.to.site.recode,
+         -Grade.Clinical..2018..,-Grade.Pathological..2018..)
+
+
+
+```
+
+
+## Rename Columns
+
+The variable names in the SEER breast cancer dataset are self-explanatory. However, some of the variable names in the dataset are too long and hinders the process of writing codes. Therefore, the variable names were re-written for some of the variables.
+
+```{r}
+## Rename Some Columns
+
+clean_data <- clean_data |>
+  rename(Age_group = Age.recode.with..1.year.olds,
+         Race = Race.recode..White..Black..Other.,
+         Primary_site = Primary.Site...labeled,
+         Cancer_grade = Grade..thru.2017.,
+         Cell_behavior = Behavior.recode.for.analysis,
+         Histology_Type = Histology.recode...broad.groupings,
+         Reason_for_no_surgery = Reason.no.cancer.directed.surgery,
+         Cause_of_death = SEER.cause.specific.death.classification) 
+```
+
+
+## Missing values
+
+
+The missing values in the SEER breast cancer dataset is not traditionally labelled as 'NA'. Therefore, the unknown or missing values needs to be labelled as 'NA' and subsequently dropped from the dataset. The unknown or missing values are labelled differently for different columns and those unique labels were extracted from the dataset. Those labels are *Unknown*, *Blank(s)*, *N/A not seq 0-59*, *Unknown; death certificate; or autopsy only (2003+)*, *Recommended, unknown if performed*, *Dead (missing/unknown COD)*. These labels were relabelled as *NA* and subsequently dropped from the dataset. After dropping the *NA* values the dataset has 13 variables with 66959 observations.
+
+```{r}
+clean_data <- clean_data |>
+  replace_with_na_if(.predicate = is.character,
+                     condition = ~.x %in% (c("Unknown","Blank(s)","N/A not seq 0-59",
+                                             "Unknown; death certificate; or autopsy only (2003+)",
+                                             "Recommended, unknown if performed",
+                                             "Dead (missing/unknown COD)"))) 
+
+
+clean_data <- clean_data |>
+  drop_na()
+```
+
+
+## Change Variable Types
+
+Most of the variables in the dataset is character type variable. Therefore, those variables needed to be converted into factor variables. In the dataset only two variables i.e. *Year.of.Diagnosis* and *Survival.months* are numeric variables and the rest of the variables were converted into factors.
+
+```{r}
+## Change Variable Types
+
+clean_data <- clean_data |>
+  mutate_at(vars(-Year.of.diagnosis,-Survival.months),as.factor)
+
+clean_data <- clean_data |>
+  mutate_at(vars(Survival.months),as.numeric)
+```
+
+
+## Recode Labels of Some Variables
+
+
+The factored variables in the dataset has labels that are too large. These labels will create problems when various graphs will be plotted as these large labels will make labeling of these graphs difficult. Therefore, the labels of these variables were recoded into something shorter which makes plotting during exploratory analysis easier. The variables for those the factors were re-labelled include *Primary_site*, *Race*, *Histology_Type*, *Cancer_Grade*, *Laterality*. 
+
+```{r}
+
+# Primary_Site
+
+clean_data <- clean_data |>
+  mutate(Primary_site = recode(Primary_site,
+                "C50.4-Upper-outer quadrant of breast" = "Upper-outer quadrant",
+                "C50.5-Lower-outer quadrant of breast" = "Lower-outer quadrant",
+                "C50.9-Breast, NOS" = "Breast, NOS",
+                "C50.8-Overlapping lesion of breast" = "Overlapping lesion",
+                "C50.3-Lower-inner quadrant of breast" = "Lower-inner quadrant",
+                "C50.6-Axillary tail of breast" = "Axillary tail",
+                "C50.2-Upper-inner quadrant of breast" = "Upper-inner quadrant",
+                "C50.1-Central portion of breast" = "Central portion",
+                "C50.0-Nipple" = "Nipple"),
+    .after = Year.of.diagnosis
+  )
+
+
+# Race 
+
+
+clean_data <- clean_data |>
+  mutate(
+    Race = recode(Race, 
+                  "White" = "White",
+                  "Black" = "Black",
+                  "Other (American Indian/AK Native, Asian/Pacific Islander)" = "Other"),
+    .after = Age_group
+  )
+
+# Histology Type
+
+clean_data <- clean_data |>
+  mutate(Histology_Type = recode(Histology_Type,
+    "8500-8549: ductal and lobular neoplasms" = "ductal and lobular neoplasms",
+    "8440-8499: cystic, mucinous and serous neoplasms" = "cystic, mucinous and serous neoplasms",
+    "8140-8389: adenomas and adenocarcinomas" = "adenomas and adenocarcinomas",
+    "8560-8579: complex epithelial neoplasms" = "complex epithelial neoplasms",
+    "8050-8089: squamous cell neoplasms" = "squamous cell neoplasms",
+    "8390-8429: adnexal and skin appendage neoplasms" = "adnexal and skin appendage neoplasms",
+    "9120-9169: blood vessel tumors" = "blood vessel tumors",
+    "8010-8049: epithelial neoplasms, NOS" = "epithelial neoplasms, NOS",
+    "8930-8999: complex mixed and stromal neoplasms" = "complex mixed and stromal neoplasms",
+    "8120-8139: transitional cell papillomas and carcinomas" = "transitional cell papillomas and carcinomas",
+    "9000-9039: fibroepithelial neoplasms" = "fibroepithelial neoplasms",
+    "8810-8839: fibromatous neoplasms" = "fibromatous neoplasms",
+    "8800-8809: soft tissue tumors and sarcomas, NOS" = "soft tissue tumors and sarcomas, NOS",
+    "8550-8559: acinar cell neoplasms" = "acinar cell neoplasms",
+    "8000-8009: unspecified neoplasms" = "unspecified neoplasms",
+    "8890-8929: myomatous neoplasms" = "myomatous neoplasms",
+    "9180-9249: osseous and chondromatous neoplasms" = "osseous and chondromatous neoplasms",
+    "8430-8439: mucoepidermoid neoplasms" = "mucoepidermoid neoplasms"),
+    .after = Diagnostic.Confirmation
+  )
+
+# Cancer Grade
+
+clean_data <- clean_data |>
+  mutate(
+    Cancer_grade = recode(Cancer_grade, 
+                  "Moderately differentiated; Grade II" = "Grade II",
+                  "Poorly differentiated; Grade III" = "Grade III",
+                  "Well differentiated; Grade I" = "Grade I",
+                  "Undifferentiated; anaplastic; Grade IV" = "Grade IV"),
+    .after = Cell_behavior
+  )
+
+# Laterality
+
+
+clean_data <- clean_data |>
+  mutate(Laterality = recode(Laterality, 
+              "Right - origin of primary" = "Right - origin of primary",
+              "Left - origin of primary" = "Left - origin of primary",
+              "Paired site, but no information concerning laterality" = "Paired site",
+              "Bilateral, single primary" = "Bilateral, single primary",
+              "Only one side - side unspecified" = "Only one side"),
+    .after = Cancer_grade
+  )
+
+```
+
+
+# Recode Reason for No Surgery Variable
+
+The reason for no surgery variable involves patient information regarding whether surgery was recommended or not and whether it was performed. For simplicity in analysis, the variable was recoded into *Surgery* variable which involves whether surgery was actually performed or not and dropping the recommendation part of labels. 
+
+```{r}
+
+# Reason for no surgery
+
+clean_data <- clean_data |>
+  mutate(
+    Surgery = recode(Reason_for_no_surgery, 
+                     "Surgery performed" = "Surgery performed",
+                     .default = "Surgery not performed"),
+    .after = Histology_Type
+  )
+
+
+## Remove Reason for no surgery column
+
+
+clean_data <- clean_data |>
+  select(-Reason_for_no_surgery)
+```
+
+
+
+The following cleaned dataset then saved into *Data* folder as *SEER Breast Cancer Clean*.
+
+```{r}
+write_csv(
+  clean_data, 
+  here::here('Data','SEER_breast_cancer_Clean.csv')
+)
+```
+
