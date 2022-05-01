@@ -12,6 +12,7 @@ output: html_document
 library(tidyverse)
 library(ggplot2)
 library(svglite)
+library(knitr)
 
 clean_data <- read.table(here::here('Data','SEER_breast_cancer_Clean.csv'), header = TRUE, sep = ',')
 
@@ -80,11 +81,11 @@ survivalxrace
 ```
 
 
-The survival months distribution across different race shows all the race experience similar distribution in terms of their survival months. Therefore, we can gather insight that the survival trajectory of patients haven't been affected by the race they are part of. 
+The survival months distribution across different race shows all the race experience similar distribution in terms of their survival months. Therefore, we can gather insight that the survival time of patients haven't been affected by the race they are part of. 
 
 ## Survival Months Distribution by Cancer Grade
 
-```{r}
+```{r, message=FALSE}
 survivalxgrade <- ggplot(clean_data|>
                            mutate(Cancer_grade = fct_relevel(Cancer_grade,
                                                              "Grade I", "Grade II",
@@ -100,7 +101,7 @@ The stage of a cancer describes the size of a tumour and how far it has spread f
 
 ## Survival Months by Age Group
 
-```{r}
+```{r, message=FALSE}
 survivalxage <- ggplot(clean_data) +
   aes(x = Age_group,
       y = Survival.months,
@@ -120,7 +121,7 @@ The above graph shows the quantiles of survival months across different age grou
 
 ## Survival Months by Primary Site
 
-```{r}
+```{r, message=FALSE}
 survivalxsite <- ggplot(clean_data) +
   aes(x = Primary_site,
       y = Survival.months,
@@ -133,4 +134,91 @@ survivalxsite <- survivalxsite + guides(x = guide_axis(angle = 45))
 
 survivalxsite
 ```
+
+
+
+The above graph shows whether the quantiles of the survival months of the breast cancer patients different across primary site of the cancer. Primary site of the cancer means where the cancerous origininated initially. In the graph the survival months haven't differed across different primary sites of the cancer. 
+
+## Survival Months by surgery
+
+
+```{r, message=FALSE}
+survivalxsurgery <- ggplot(clean_data) +
+  aes(x = Surgery,
+      y = Survival.months,
+      color = Surgery) +
+  geom_boxplot()+
+  labs(title = "Boxplot of Survival Months by Surgery")
+
+
+survivalxsurgery <- survivalxsurgery + guides(x = guide_axis(angle = 45))
+
+survivalxsurgery
+```
+
+
+The above graph shows the distribution of survival months for patients who had surgery and who hadn't. From the boxplot it can be concluded that the median survival time is higher for patients who had surgery compared to those who did not have a surgery. Therefore, there is a hint that surgery has helped prolonging patient's survival. 
+
+## Survival months by Laterality
+
+```{r, message=FALSE}
+
+
+survivalxlaterality <- ggplot(clean_data) +
+  aes(x = Laterality,
+      y = Survival.months,
+      color = Laterality) +
+  geom_boxplot()+
+  labs(title = "Boxplots of Survival Months by Laterality")
+
+
+survivalxlaterality <- survivalxlaterality + guides(x = guide_axis(angle = 45))
+
+survivalxlaterality
+```
+
+
+Cancer laterality of breast cancer means which side of the breasts the cancerous cells has spread. The above graph shows the distribution of survival months across the laterality of breast cancer. From the graph it can be observed that patients with cancer only one side of the breast cancer (left/right) has higher median survival month compared to other lateralities. It also makes sense as cancer cells on one side of the pair of breast will have higher survival times compared to both. 
+
+## Survival Months by Cause of Death
+
+
+```{r, message=FALSE}
+
+survivalxcod <- ggplot(clean_data) +
+  aes(x = Cause_of_death,
+      y = Survival.months,
+      color = Cause_of_death) +
+  geom_boxplot()+
+  labs(title = "Boxplot of Survival Months by Cause of Death")
+
+
+survivalxcod <- survivalxcod + guides(x = guide_axis(angle = 45))
+
+survivalxcod
+
+```
+
+
+The above graph shows the survival month distribution of patients who died because of breast cancer and who died of other causes. The median survival month of patients who died of breast cancer is lower compared to those who are alive or dead because of other disease.
+
+## Proportions of Surgery on Cancer Histology type.
+
+
+The cancer histology type is a description of a tumor based on how abnormal the cancer cells and tissue look under a microscope and how quickly the cancer cells are likely to grow and spread. We wanted to see if there is any histologic type which didn't require surgery rather other treatment procedures e.g. chemotherapy, radiationtherapy etc. The following table shows the proportion of patients who had surgery and who hadn't based on their corresponding histology type. The proportions tells us in each of the histology types majority of the patients had surgery and no histology type had an opposite case where the majority did not have a surgery. 
+
+```{r, message=FALSE}
+clean_data |>
+  group_by(Histology_Type, Surgery) |>
+  summarise(n=n()) |>
+  mutate(prop = n/sum(n)) |>
+  subset(select = c("Surgery", "Histology_Type", "prop"))|>
+  spread(Surgery, prop) |>
+  kable()
+```
+
+
+## Conclusion
+
+In summary, from the above exploratory analysis we have learned that most of the breast cancer patients are aged people with most of them being white.There are no differences in survival distribution across different races in US population. The survival time of patients differ if the patient is in Grade IV cancer level. Other than that the survival distribution doesn't differ across different age groups and primary site of the cancer. However, patients who had surgery had survived longer than those who did not and patients with cancer one side of the breasts also have higher survival times. In terms of which type of patients require surgery there haven't been any finding that certain histology type doesn't require surgery. 
 
