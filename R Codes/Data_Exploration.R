@@ -25,12 +25,29 @@ age_distribution
 
 ## Saving the plot
 
+## Vector format
 
-ggsave(here::here("Figures", "Age_Distribution.svg"), 
-       age_dsitrbution,
+ggsave(here::here("Outputs", "Figures", "Age_Distribution.svg"), 
+       age_distribution,
        height = 6,
        width = 7
 )
+
+
+## pdf format
+
+ggsave(here::here("Outputs", "Figures", "Age_Distribution.pdf"),
+       age_distribution,
+       height = 6,
+       width = 7)
+
+## bitmap format
+
+ggsave(here::here("Outputs", "Figures", "Age_Distribution.bmp"),
+       age_distribution,
+       height = 6,
+       width = 7)
+
 
 
 ## Age x Race Barplot
@@ -46,9 +63,33 @@ agexrace <- agexrace + guides(x = guide_axis(angle = 45))
 
 agexrace
 
+
+
 ## Saving the plot
 
-ggsave(here::here("Figures", "Age X Race.svg"), 
+
+## vector format
+
+ggsave(here::here("Outputs", "Figures", "Age X Race.svg"), 
+       agexrace,
+       height = 6,
+       width = 7
+)
+
+
+## pdf format
+
+ggsave(here::here("Outputs", "Figures", "Age X Race.pdf"), 
+       agexrace,
+       height = 6,
+       width = 7
+)
+
+
+## bmp format
+
+
+ggsave(here::here("Outputs", "Figures", "Age X Race.bmp"), 
        agexrace,
        height = 6,
        width = 7
@@ -64,13 +105,38 @@ survivalxrace <- ggplot(clean_data)+
 
 survivalxrace
 
+
+
 ## Saving the plot
 
-ggsave(here::here("Figures", "Survival X Race.svg"), 
+
+
+## vector format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Race.svg"), 
        survivalxrace,
        height = 6,
        width = 7
 )
+
+
+## pdf format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Race.pdf"), 
+       survivalxrace,
+       height = 6,
+       width = 7
+)
+
+## bmp format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Race.bmp"), 
+       survivalxrace,
+       height = 6,
+       width = 7
+)
+
+
 
 ## Survival distribution by Grade
 
@@ -84,13 +150,38 @@ survivalxgrade <- ggplot(clean_data|>
 
 survivalxgrade
 
+
+
+
 ## Saving the plot
 
-ggsave(here::here("Figures", "Survival X Grades.svg"), 
+## vector format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Grades.svg"), 
        survivalxgrade,
        height = 6,
        width = 7
 )
+
+
+## pdf format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Grades.pdf"), 
+       survivalxgrade,
+       height = 6,
+       width = 7
+)
+
+
+## bmp format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Grades.bmp"), 
+       survivalxgrade,
+       height = 6,
+       width = 7
+)
+
+
 
 
 ## Survival Months by Age_group
@@ -111,11 +202,35 @@ survivalxage
 
 ## Saving the plot
 
-ggsave(here::here("Figures", "Survival X Age.svg"), 
+
+## vector format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Age.svg"), 
        survivalxage,
        height = 6,
        width = 7
 )
+
+
+## pdf format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Age.pdf"), 
+       survivalxage,
+       height = 6,
+       width = 7
+)
+
+
+## bmp format
+
+
+ggsave(here::here("Outputs", "Figures", "Survival X Age.bmp"), 
+       survivalxage,
+       height = 6,
+       width = 7
+)
+
+
 
 ## survival month by primary site
 
@@ -134,11 +249,34 @@ survivalxsite
 
 ## Saving the plot
 
-ggsave(here::here("Figures", "Survival X site.svg"), 
+
+## vector format
+
+ggsave(here::here("Outputs", "Figures", "Survival X site.svg"), 
        survivalxsite,
        height = 6,
        width = 7
 )
+
+
+## pdf format
+
+ggsave(here::here("Outputs", "Figures", "Survival X site.pdf"), 
+       survivalxsite,
+       height = 6,
+       width = 7
+)
+
+
+## bmp format
+
+
+ggsave(here::here("Outputs", "Figures", "Survival X site.bmp"), 
+       survivalxsite,
+       height = 6,
+       width = 7
+)
+
 
 
 ## Survival by surgery
@@ -155,13 +293,36 @@ survivalxsurgery <- survivalxsurgery + guides(x = guide_axis(angle = 45))
 
 survivalxsurgery
 
+
+
 ## Saving the plot
 
+## vector format
 
-ggsave(here::here('Figures', "Survival X Surgery.svg"),
+ggsave(here::here("Outputs", "Figures", "Survival X Surgery.svg"),
        survivalxsurgery,
        height = 6,
        width = 5)
+
+
+## pdf format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Surgery.pdf"),
+       survivalxsurgery,
+       height = 6,
+       width = 5)
+
+
+
+
+## bmp format
+
+
+ggsave(here::here("Outputs", "Figures", "Survival X Surgery.bmp"),
+       survivalxsurgery,
+       height = 6,
+       width = 5)
+
 
 
 ## Survival by Laterality
@@ -181,8 +342,28 @@ survivalxlaterality
 
 ## Saving the plot
 
+## vector format
 
-ggsave(here::here('Figures','Survival X Laterality.svg'),
+
+ggsave(here::here("Outputs", "Figures","Survival X Laterality.svg"),
+       survivalxlaterality,
+       height = 6,
+       width = 10)
+
+
+## pdf format
+
+ggsave(here::here("Outputs", "Figures","Survival X Laterality.pdf"),
+       survivalxlaterality,
+       height = 6,
+       width = 10)
+
+
+
+## bmp format
+
+
+ggsave(here::here("Outputs", "Figures","Survival X Laterality.bmp"),
        survivalxlaterality,
        height = 6,
        width = 10)
@@ -205,11 +386,29 @@ survivalxhistology
 
 ## Saving the plot
 
+## vector format
 
-ggsave(here::here('Figures','Survival X Histology.svg'),
+ggsave(here::here("Outputs", "Figures", "Survival X Histology.svg"),
        survivalxhistology,
        height = 10,
        width = 10)
+
+## pdf format
+
+ggsave(here::here("Outputs", "Figures", "Survival X Histology.pdf"),
+       survivalxhistology,
+       height = 10,
+       width = 10)
+
+
+## bmp format
+
+
+ggsave(here::here("Outputs", "Figures", "Survival X Histology.bmp"),
+       survivalxhistology,
+       height = 10,
+       width = 10)
+
 
 ## Survival by Cause of Death
 
@@ -221,8 +420,10 @@ survivalxcod <- ggplot(clean_data) +
   geom_boxplot()+
   labs(title = "Boxplot of Survival Months by Cause of Death")
 
-survivalxcod
+
 survivalxcod <- survivalxcod + guides(x = guide_axis(angle = 45))
+
+survivalxcod
 
 ## Two Way table proportions
 
