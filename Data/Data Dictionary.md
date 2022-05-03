@@ -4,7 +4,7 @@ The Surveillance, Epidemiology, and End Results (SEER) program of the National C
 
 The *SEER_breast_cancer.csv* is the raw dataset that contains all the variables. The *SEER_breast_cancer_Clean.csv* is the cleaned dataset which was further used in exploratory analysis.
 
-Variable | Definition
+Variable | Type | Definition
 ---|---------
-`page_id` | The unique identifier for that characters page within the wikia
-`name` | The name of the character
+`page_id` | Chr |The unique identifier for that characters page within the wikia
+`name` | Chr |The name of the character
