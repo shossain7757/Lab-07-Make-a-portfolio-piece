@@ -4,7 +4,39 @@ The Surveillance, Epidemiology, and End Results (SEER) program of the National C
 
 The *SEER_breast_cancer.csv* is the raw dataset that contains all the variables. The *SEER_breast_cancer_Clean.csv* is the cleaned dataset which was further used in exploratory analysis.
 
-Variable | Type | Definition
----|---- | ---------
-`page_id` | Chr |The unique identifier for that characters page within the wikia
-`name` | Chr |The name of the character
+Variable | Type 
+------|---- 
+`Age.recode.with..1.year.olds` | Chr 
+`Race.recode..White..Black..Other.` | Chr 
+`Sex`  | Chr
+`Year.of.diagnosis` | Chr
+`AYA.site.recode.2020.Revision` | Chr
+`ICCC.site.recode.3rd.edition.IARC.2017` | Chr
+`Primary.Site...labeled` | Chr
+`Primary.Site` | Chr
+`Histologic.Type.ICD.O.3` | Chr
+`Behavior.recode.for.analysis` | Chr
+`Grade..thru.2017.` | Chr
+`Grade.Clinical..2018..` | Chr
+`Grade.Pathological..2018..` | Chr
+`Laterality` | Chr
+`Diagnostic.Confirmation` | Chr
+`ICD.O.3.Hist.behav` | Chr
+`ICD.O.3.Hist.behav..malignant` | Chr
+`Histology.recode...broad.groupings` | Chr
+`ICCC.site.recode.extended.3rd.edition.IARC.2017` | Chr
+`Site.recode.ICD.O.3.WHO.2008..for.SIRs.` | Chr
+`ICCC.site.recode.ICD.O.3.WHO.2008` | Chr
+`ICCC.site.rec.extended.ICD.O.3.WHO.2008` | Chr
+`Schema.ID..2018..` | Chr
+`AJCC.ID..2018..` | Chr
+`EOD.Schema.ID.Recode..2010..` | Chr
+`Site.recode...rare.tumors` | Chr
+`AYA.site.recode.WHO.2008` | Chr 
+`RX.Summ..Surg.Prim.Site..1998..` | Chr
+`RX.Summ..Surg.Oth.Reg.Dis..2003..` | Chr
+`Reason.no.cancer.directed.surgery` | Chr
+`COD.to.site.recode` | Chr
+`SEER.cause.specific.death.classification` | Chr
+`SEER.other.cause.of.death.classification` | Chr
+`Survival.months` | Int
